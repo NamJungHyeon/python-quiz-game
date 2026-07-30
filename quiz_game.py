@@ -35,7 +35,10 @@ class QuizGame:
 
     def _get_int_input(self, prompt, min_value, max_value):
         while True:
-            raw = input(prompt)
+            try:
+                raw = input(prompt)
+            except EOFError:
+                self._handle_eof()
             text = raw.strip()
 
             if text == "":
@@ -122,12 +125,20 @@ class QuizGame:
 
     def _get_text_input(self, prompt):
         while True:
-            raw = input(prompt)
+            try:
+                raw = input(prompt)
+            except EOFError:
+                self._handle_eof()
             text = raw.strip()
             if text == "":
                 print("⚠️ 입력이 없습니다. 다시 입력해주세요.")
                 continue
             return text
+
+    def _handle_eof(self):
+        print("\n⚠️ 입력 스트림이 종료되었습니다. 게임을 저장하고 종료합니다.")
+        self.save_state()
+        raise SystemExit(0)
 
     # ---------- 퀴즈 목록 ----------
     def list_quizzes(self):
