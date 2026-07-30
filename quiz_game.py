@@ -1,6 +1,7 @@
 import json
 import os
 import random
+from datetime import datetime
 
 from data import DEFAULT_QUIZZES
 from quiz import Quiz
@@ -18,6 +19,7 @@ class QuizGame:
     def __init__(self):
         self.quizzes = []
         self.best_score = None
+        self.history = []
         self.load_state()
 
     # ---------- 메뉴 ----------
@@ -148,7 +150,15 @@ class QuizGame:
         return correct, used_hint
 
     def _record_history(self, total, correct_count, score, hints_used):
-        pass  # 히스토리 기능은 이후 커밋에서 구현 예정
+        self.history.append(
+            {
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "total": total,
+                "correct": correct_count,
+                "score": score,
+                "hints_used": hints_used,
+            }
+        )
 
     # ---------- 퀴즈 추가 ----------
     def add_quiz(self):
@@ -226,11 +236,26 @@ class QuizGame:
         b = self.best_score
         print(f"\n🏆 최고 점수: {b['score']}점 ({b['total']}문제 중 {b['correct']}문제 정답)")
 
+        if not self.history:
+            print("📜 게임 기록이 없습니다.")
+            return
+
+        print("\n📜 최근 게임 기록 (최신순)")
+        print("-" * 40)
+        for entry in reversed(self.history[-5:]):
+            hint_text = f", 힌트 {entry['hints_used']}회" if entry["hints_used"] else ""
+            print(
+                f"- {entry['timestamp']} | {entry['correct']}/{entry['total']}문제 "
+                f"정답 | {entry['score']}점{hint_text}"
+            )
+        print("-" * 40)
+
     # ---------- 파일 저장/불러오기 ----------
     def load_state(self):
         if not os.path.exists(STATE_FILE):
             self.quizzes = list(DEFAULT_QUIZZES)
             self.best_score = None
+            self.history = []
             return
 
         try:
@@ -238,15 +263,18 @@ class QuizGame:
                 data = json.load(f)
             self.quizzes = [Quiz.from_dict(q) for q in data["quizzes"]]
             self.best_score = data.get("best_score")
+            self.history = data.get("history", [])
         except (json.JSONDecodeError, KeyError, TypeError, OSError):
             print("⚠️ 저장된 데이터 파일이 손상되어 기본 퀴즈 데이터로 초기화합니다.")
             self.quizzes = list(DEFAULT_QUIZZES)
             self.best_score = None
+            self.history = []
 
     def save_state(self):
         data = {
             "quizzes": [quiz.to_dict() for quiz in self.quizzes],
             "best_score": self.best_score,
+            "history": self.history,
         }
         try:
             with open(STATE_FILE, "w", encoding="utf-8") as f:
