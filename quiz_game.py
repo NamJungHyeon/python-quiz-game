@@ -1,4 +1,5 @@
 from data import DEFAULT_QUIZZES
+from quiz import Quiz
 
 
 class QuizGame:
@@ -53,6 +54,8 @@ class QuizGame:
 
             if choice == 1:
                 self.play_quiz()
+            elif choice == 2:
+                self.add_quiz()
             elif choice == 5:
                 print("게임을 종료합니다. 안녕히 가세요!")
                 break
@@ -86,3 +89,26 @@ class QuizGame:
             self.best_score = {"score": score, "correct": correct_count, "total": total}
             print("🎉 새로운 최고 점수입니다!")
         print("=" * 40)
+
+    # ---------- 퀴즈 추가 ----------
+    def add_quiz(self):
+        print("\n📌 새로운 퀴즈를 추가합니다.")
+        question = self._get_text_input("문제를 입력하세요: ")
+
+        choices = []
+        for i in range(1, 5):
+            choices.append(self._get_text_input(f"선택지 {i}: "))
+
+        answer = self._get_int_input("정답 번호 (1-4): ", 1, 4)
+
+        self.quizzes.append(Quiz(question, choices, answer))
+        print("\n✅ 퀴즈가 추가되었습니다!")
+
+    def _get_text_input(self, prompt):
+        while True:
+            raw = input(prompt)
+            text = raw.strip()
+            if text == "":
+                print("⚠️ 입력이 없습니다. 다시 입력해주세요.")
+                continue
+            return text
