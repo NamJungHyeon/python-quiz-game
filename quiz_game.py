@@ -58,6 +58,8 @@ class QuizGame:
                 self.add_quiz()
             elif choice == 3:
                 self.list_quizzes()
+            elif choice == 4:
+                self.show_best_score()
             elif choice == 5:
                 print("게임을 종료합니다. 안녕히 가세요!")
                 break
@@ -126,3 +128,12 @@ class QuizGame:
         for i, quiz in enumerate(self.quizzes, start=1):
             print(f"[{i}] {quiz.question}")
         print("-" * 40)
+
+    # ---------- 점수 확인 ----------
+    def show_best_score(self):
+        if self.best_score is None:
+            print("\n⚠️ 아직 퀴즈를 풀지 않았습니다. 먼저 퀴즈를 풀어보세요.")
+            return
+
+        b = self.best_score
+        print(f"\n🏆 최고 점수: {b['score']}점 ({b['total']}문제 중 {b['correct']}문제 정답)")
