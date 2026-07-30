@@ -12,7 +12,7 @@ class QuizGame:
     """퀴즈 게임 전체 흐름을 관리하는 클래스."""
 
     MENU_MIN = 1
-    MENU_MAX = 5
+    MENU_MAX = 6
     HINT_PENALTY = 5
 
     def __init__(self):
@@ -29,7 +29,8 @@ class QuizGame:
         print("2. 퀴즈 추가")
         print("3. 퀴즈 목록")
         print("4. 점수 확인")
-        print("5. 종료")
+        print("5. 퀴즈 삭제")
+        print("6. 종료")
         print("=" * 40)
 
     def get_menu_choice(self):
@@ -75,6 +76,8 @@ class QuizGame:
             elif choice == 4:
                 self.show_best_score()
             elif choice == 5:
+                self.delete_quiz()
+            elif choice == 6:
                 self.save_state()
                 print("게임을 종료합니다. 안녕히 가세요!")
                 break
@@ -199,6 +202,20 @@ class QuizGame:
         for i, quiz in enumerate(self.quizzes, start=1):
             print(f"[{i}] {quiz.question}")
         print("-" * 40)
+
+    # ---------- 퀴즈 삭제 ----------
+    def delete_quiz(self):
+        if not self.quizzes:
+            print("\n⚠️ 등록된 퀴즈가 없습니다.")
+            return
+
+        self.list_quizzes()
+        index = self._get_int_input(
+            f"\n삭제할 퀴즈 번호 (1-{len(self.quizzes)}): ", 1, len(self.quizzes)
+        )
+        removed = self.quizzes.pop(index - 1)
+        self.save_state()
+        print(f"\n🗑️ 삭제되었습니다: {removed.question}")
 
     # ---------- 점수 확인 ----------
     def show_best_score(self):
