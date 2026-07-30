@@ -56,6 +56,8 @@ class QuizGame:
                 self.play_quiz()
             elif choice == 2:
                 self.add_quiz()
+            elif choice == 3:
+                self.list_quizzes()
             elif choice == 5:
                 print("게임을 종료합니다. 안녕히 가세요!")
                 break
@@ -112,3 +114,15 @@ class QuizGame:
                 print("⚠️ 입력이 없습니다. 다시 입력해주세요.")
                 continue
             return text
+
+    # ---------- 퀴즈 목록 ----------
+    def list_quizzes(self):
+        if not self.quizzes:
+            print("\n⚠️ 등록된 퀴즈가 없습니다.")
+            return
+
+        print(f"\n📋 등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
+        print("-" * 40)
+        for i, quiz in enumerate(self.quizzes, start=1):
+            print(f"[{i}] {quiz.question}")
+        print("-" * 40)
