@@ -13,6 +13,7 @@ class QuizGame:
 
     MENU_MIN = 1
     MENU_MAX = 5
+    HINT_PENALTY = 5
 
     def __init__(self):
         self.quizzes = []
@@ -96,27 +97,55 @@ class QuizGame:
 
         quizzes_to_play = random.sample(self.quizzes, total)
 
-        print(f"\n📝 퀴즈를 시작합니다! (총 {total}문제)")
+        print(f"\n📝 퀴즈를 시작합니다! (총 {total}문제, 힌트 보기: 0 입력)")
         correct_count = 0
+        hints_used = 0
 
         for index, quiz in enumerate(quizzes_to_play, start=1):
             print("-" * 40)
-            quiz.display(index)
-            answer = self._get_int_input("\n정답 입력: ", 1, len(quiz.choices))
-            if quiz.is_correct(answer):
-                print("✅ 정답입니다!")
+            correct, used_hint = self._play_single_quiz(quiz, index)
+            if correct:
                 correct_count += 1
-            else:
-                print(f"❌ 오답입니다. 정답은 {quiz.answer}번입니다.")
+            if used_hint:
+                hints_used += 1
 
-        score = round(correct_count / total * 100)
+        raw_score = round(correct_count / total * 100)
+        score = max(0, raw_score - hints_used * self.HINT_PENALTY)
+
         print("\n" + "=" * 40)
-        print(f"🏆 결과: {total}문제 중 {correct_count}문제 정답! ({score}점)")
+        result_line = f"🏆 결과: {total}문제 중 {correct_count}문제 정답! ({score}점"
+        result_line += f", 힌트 {hints_used}회 사용)" if hints_used else ")"
+        print(result_line)
         if self.best_score is None or score > self.best_score["score"]:
             self.best_score = {"score": score, "correct": correct_count, "total": total}
             print("🎉 새로운 최고 점수입니다!")
         print("=" * 40)
+
+        self._record_history(total, correct_count, score, hints_used)
         self.save_state()
+
+    def _play_single_quiz(self, quiz, index):
+        quiz.display(index)
+        used_hint = False
+        while True:
+            answer = self._get_int_input(
+                "\n정답 입력 (힌트 보기: 0): ", 0, len(quiz.choices)
+            )
+            if answer == 0:
+                quiz.show_hint()
+                used_hint = True
+                continue
+            break
+
+        correct = quiz.is_correct(answer)
+        if correct:
+            print("✅ 정답입니다!")
+        else:
+            print(f"❌ 오답입니다. 정답은 {quiz.answer}번입니다.")
+        return correct, used_hint
+
+    def _record_history(self, total, correct_count, score, hints_used):
+        pass  # 히스토리 기능은 이후 커밋에서 구현 예정
 
     # ---------- 퀴즈 추가 ----------
     def add_quiz(self):
@@ -128,8 +157,9 @@ class QuizGame:
             choices.append(self._get_text_input(f"선택지 {i}: "))
 
         answer = self._get_int_input("정답 번호 (1-4): ", 1, 4)
+        hint = self._get_optional_text_input("힌트 (선택 사항, 없으면 Enter): ")
 
-        self.quizzes.append(Quiz(question, choices, answer))
+        self.quizzes.append(Quiz(question, choices, answer, hint))
         self.save_state()
         print("\n✅ 퀴즈가 추가되었습니다!")
 
@@ -144,6 +174,14 @@ class QuizGame:
                 print("⚠️ 입력이 없습니다. 다시 입력해주세요.")
                 continue
             return text
+
+    def _get_optional_text_input(self, prompt):
+        try:
+            raw = input(prompt)
+        except EOFError:
+            self._handle_eof()
+        text = raw.strip()
+        return text if text else None
 
     def _handle_eof(self):
         print("\n⚠️ 입력 스트림이 종료되었습니다. 게임을 저장하고 종료합니다.")
