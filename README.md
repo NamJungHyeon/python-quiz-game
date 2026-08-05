@@ -519,3 +519,20 @@ python-quiz-game/
 - **점수 계산/퀴즈 구조 변경 시 수정 범위**: "몇 점을 줄지"는 `play_quiz()`(`quiz_game.py`)만,
   "문제가 어떤 모양인지"(예: 선택지 5개로 변경)는 `Quiz` 클래스(`quiz.py`)와 `add_quiz()`의 입력
   로직만 고치면 되도록 두 책임을 분리해뒀습니다.
+
+## 12. 실행 화면 캡처
+
+> `docs/screenshots/` 폴더에 아래 파일명으로 캡처를 넣으면 이미지가 자동으로 표시됩니다.
+> 아직 캡처 전이라 빈 칸(깨진 이미지)으로 보이는 게 정상입니다.
+
+| 화면 | 캡처 | 무엇을 담아야 하는지 |
+| --- | --- | --- |
+| 메뉴 | ![메뉴 화면](docs/screenshots/01-menu.png) | 6개 메뉴가 정상 표시된 첫 화면 |
+| 퀴즈 풀기 | ![퀴즈 풀기 화면](docs/screenshots/02-play.png) | 문제 출제부터 정답/오답 판정 결과까지 |
+| 잘못된 입력 처리 | ![입력 오류 처리 화면](docs/screenshots/03-invalid-input.png) | `abc`, `9`, 빈 입력 등에 대한 오류 메시지 |
+| 퀴즈 추가 | ![퀴즈 추가 화면](docs/screenshots/04-add-quiz.png) | 입력 과정 + "✅ 퀴즈가 추가되었습니다!" |
+| 퀴즈 목록 | ![퀴즈 목록 화면](docs/screenshots/05-list.png) | 등록된 16개 퀴즈 전체 목록 |
+| 점수 확인 | ![점수 확인 화면](docs/screenshots/06-score.png) | 최고 점수 + 최근 게임 기록(history) |
+| 재실행 후 데이터 유지 | ![데이터 유지 확인 화면](docs/screenshots/07-persist.png) | 재실행 시 `📂 저장된 데이터를 불러왔습니다 (...)` 문구가 이전 값 그대로 표시 |
+| `git log` 그래프 | ![git log graph](docs/screenshots/08-git-log-graph.png) | `git log --oneline --graph` — 브랜치 병합 커밋과 10개 이상 커밋이 보이도록 |
+| 개발 환경 (선택) | ![개발 환경 화면](docs/screenshots/09-dev-env.png) | VSCode, `python3 --version`, `git config --list` 등 |
