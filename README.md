@@ -196,23 +196,114 @@ python3 main.py
 
 현재 퀴즈 목록, 최고 점수, 게임 기록을 `state.json`에 저장한 뒤 프로그램을 마칩니다.
 
-### 4-7. 공통 입력/예외 처리
+### 4-7. 공통 입력/예외 처리 (상세)
 
-- 숫자 입력이 필요한 모든 곳(메뉴 선택, 정답 입력, 문제 수 선택 등)에서 앞뒤 공백 제거, 숫자 변환
-  실패, 허용 범위 초과, 빈 입력을 모두 검사하여 안내 메시지 출력 후 재입력을 받습니다.
+숫자 입력 · Ctrl+C/EOF · 파일 손상, 세 가지 상황을 각각 어디서 어떻게 처리하는지 실제 코드와
+함께 정리했습니다.
 
-  ```
-  선택: abc
-  ⚠️ 잘못된 입력입니다. 1-6 사이의 숫자를 입력하세요.
+#### (1) 숫자 입력 검증 — 공백 제거 / 변환 실패 / 범위 초과 / 빈 입력
 
-  선택: 9
-  ⚠️ 잘못된 입력입니다. 1-6 사이의 숫자를 입력하세요.
-  ```
+메뉴 선택, 정답 입력, 문제 수 선택 등 숫자를 입력받는 모든 곳에서
+`_get_int_input()` 하나를 공통으로 사용합니다. 4가지 케이스를 전부 검사할 때까지 같은 프롬프트를
+반복해서 보여줍니다. (`quiz_game.py`)
 
-- `Ctrl+C`(KeyboardInterrupt), 입력 스트림 종료(EOFError) 발생 시에도 가능한 범위에서 데이터를
-  저장한 뒤 안전하게 종료합니다(비정상 종료 없음).
-- `state.json`이 없거나(최초 실행) 손상된 경우에도 안내 메시지를 출력하고 기본 퀴즈 데이터로
-  정상 동작합니다.
+```python
+def _get_int_input(self, prompt, min_value, max_value):
+    while True:
+        try:
+            raw = input(prompt)
+        except EOFError:
+            self._handle_eof()
+        text = raw.strip()                      # ① 앞뒤 공백 제거
+
+        if text == "":                           # ② 빈 입력
+            print(f"⚠️ 입력이 없습니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
+            continue
+
+        if not text.lstrip("-").isdigit():        # ③ 숫자 변환 실패
+            print(f"⚠️ 잘못된 입력입니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
+            continue
+
+        value = int(text)
+        if value < min_value or value > max_value:  # ④ 허용 범위 초과
+            print(f"⚠️ 잘못된 입력입니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
+            continue
+
+        return value
+```
+
+```
+선택: abc
+⚠️ 잘못된 입력입니다. 1-6 사이의 숫자를 입력하세요.
+
+선택: 9
+⚠️ 잘못된 입력입니다. 1-6 사이의 숫자를 입력하세요.
+```
+
+#### (2) `Ctrl+C` / `EOFError` — 저장 후 안전 종료
+
+`Ctrl+C`는 최상위(`main.py`)에서 한 번에 잡고, `EOFError`는 입력을 받는 지점마다
+`_handle_eof()`를 호출하도록 했습니다. 두 경우 모두 **종료 전에 반드시 `save_state()`를 먼저
+호출**합니다.
+
+```python
+# main.py
+def main():
+    game = QuizGame()
+    try:
+        game.run()
+    except KeyboardInterrupt:
+        print("\n\n⚠️ Ctrl+C가 감지되었습니다. 게임을 저장하고 종료합니다.")
+        game.save_state()
+```
+
+```python
+# quiz_game.py
+def _handle_eof(self):
+    print("\n⚠️ 입력 스트림이 종료되었습니다. 게임을 저장하고 종료합니다.")
+    self.save_state()
+    raise SystemExit(0)
+```
+
+#### (3) `state.json` 없음/손상 — 기본 데이터로 복구
+
+파일이 아예 없으면(최초 실행) 바로 기본 데이터를 쓰고, 파일은 있지만 JSON 형식이 깨졌거나
+스키마가 다르면(`JSONDecodeError`, `KeyError`, `TypeError`, `OSError`) 안내 메시지를 출력한 뒤
+기본 데이터로 초기화합니다. (`quiz_game.py`)
+
+```python
+def load_state(self):
+    if not os.path.exists(STATE_FILE):
+        self.quizzes = list(DEFAULT_QUIZZES)
+        self.best_score = None
+        self.history = []
+        return
+
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.quizzes = [Quiz.from_dict(q) for q in data["quizzes"]]
+        self.best_score = data.get("best_score")
+        self.history = data.get("history", [])
+    except (json.JSONDecodeError, KeyError, TypeError, OSError):
+        print("⚠️ 저장된 데이터 파일이 손상되어 기본 퀴즈 데이터로 초기화합니다.")
+        self.quizzes = list(DEFAULT_QUIZZES)
+        self.best_score = None
+        self.history = []
+```
+
+저장(`save_state`) 쪽에서도 디스크 쓰기 실패(`OSError`, 예: 권한 문제·디스크 공간 부족)를 잡아서
+프로그램이 죽지 않고 에러 메시지만 출력하도록 처리했습니다.
+
+```python
+def save_state(self):
+    data = {"quizzes": [...], "best_score": self.best_score, "history": self.history}
+    try:
+        with open(STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except OSError as error:
+        print(f"⚠️ 데이터 저장 중 오류가 발생했습니다: {error}")
+```
 
 ### 4-8. 보너스 기능
 
