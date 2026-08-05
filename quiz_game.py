@@ -55,17 +55,17 @@ class QuizGame:
                 self._handle_eof()
             text = raw.strip()  # 1) 앞뒤 공백 제거
 
-            if text == "":  # 2) 빈 입력
+            if not text:  # 2) 빈 입력
                 print(f"⚠️ 입력이 없습니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
                 continue
 
-            # "-"를 뗀 나머지가 전부 숫자인지 검사 (음수 형태까지 우선 허용하고 범위에서 걸러냄)
-            if not text.lstrip("-").isdigit():  # 3) 숫자 변환 실패
+            try:
+                value = int(text)  # 3) 숫자 변환 실패 -> ValueError
+            except ValueError:
                 print(f"⚠️ 잘못된 입력입니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
                 continue
 
-            value = int(text)
-            if value < min_value or value > max_value:  # 4) 허용 범위 초과
+            if not min_value <= value <= max_value:  # 4) 허용 범위 초과
                 print(f"⚠️ 잘못된 입력입니다. {min_value}-{max_value} 사이의 숫자를 입력하세요.")
                 continue
 
@@ -182,9 +182,7 @@ class QuizGame:
         print("\n📌 새로운 퀴즈를 추가합니다.")
         question = self._get_text_input("문제를 입력하세요: ")
 
-        choices = []
-        for i in range(1, 5):
-            choices.append(self._get_text_input(f"선택지 {i}: "))
+        choices = [self._get_text_input(f"선택지 {i}: ") for i in range(1, 5)]
 
         answer = self._get_int_input("정답 번호 (1-4): ", 1, 4)
         hint = self._get_optional_text_input("힌트 (선택 사항, 없으면 Enter): ")
@@ -201,7 +199,7 @@ class QuizGame:
             except EOFError:
                 self._handle_eof()
             text = raw.strip()
-            if text == "":
+            if not text:
                 print("⚠️ 입력이 없습니다. 다시 입력해주세요.")
                 continue
             return text
@@ -213,7 +211,7 @@ class QuizGame:
         except EOFError:
             self._handle_eof()
         text = raw.strip()
-        return text if text else None
+        return text or None
 
     def _handle_eof(self):
         """입력 스트림이 끊겼을 때(EOFError) 공통으로 호출: 저장 후 안전 종료."""
