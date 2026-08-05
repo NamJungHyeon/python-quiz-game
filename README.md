@@ -341,4 +341,21 @@ python-quiz-game/
 | `best_score` | 지금까지의 최고 점수. 아직 한 번도 퀴즈를 풀지 않았다면 `null`이며, 이 경우 "점수 확인" 메뉴에서 안내 메시지를 출력합니다. `score`/`correct`/`total`을 함께 저장합니다. |
 | `history` | 퀴즈를 풀 때마다 추가되는 게임 기록 목록. `timestamp`(푼 시각), `total`(문제 수), `correct`(정답 수), `score`(획득 점수), `hints_used`(힌트 사용 횟수)를 담습니다. 오래된 기록도 계속 누적되며, 화면에는 최근 5개만 표시합니다. |
 
-> 이 저장소는 clone/commit/push/pull, 브랜치 생성/병합(`checkout`, `merge`) 실습을 통해 검증되었습니다.
+## 9. Git 브랜치·복제 실습 기록
+
+- **브랜치 생성/병합**: 퀴즈 풀기 기능은 `main`이 아닌 `feature/quiz-play` 브랜치에서 작업했습니다
+  (`94131a5 Feat: 퀴즈 풀기 기능 구현`). 기능이 완성된 뒤 `main`으로 병합했습니다
+  (`45768ca Merge branch 'feature/quiz-play'`).
+- **저장소 복제 실습(clone/pull)**: 별도 디렉터리에 이 저장소를 `clone`한 뒤 README를 한 줄 수정해
+  `commit`/`push`하고, 원래 작업 디렉터리에서 `pull`로 받아왔습니다
+  (`856dd9c Docs: README에 clone/pull 실습 확인 문구 추가` — fast-forward pull로 반영).
+
+```
+* 45768ca Merge branch 'feature/quiz-play': 퀴즈 풀기 기능 병합
+|\
+| * 94131a5 (feature/quiz-play) Feat: 퀴즈 풀기 기능 구현 (QuizGame 클래스, 채점 및 결과 출력)
+|/
+```
+
+> 이 저장소는 `init`/`add`/`commit`/`push`/`pull`/`checkout`/`clone` 7개 기본 명령어를 모두 사용해
+> 검증되었습니다.
