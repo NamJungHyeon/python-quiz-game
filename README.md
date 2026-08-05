@@ -522,17 +522,19 @@ python-quiz-game/
 
 ## 12. 실행 화면 캡처
 
-> `docs/screenshots/` 폴더에 아래 파일명으로 캡처를 넣으면 이미지가 자동으로 표시됩니다.
-> 아직 캡처 전이라 빈 칸(깨진 이미지)으로 보이는 게 정상입니다.
+> `docs/screenshots/` 폴더의 캡처 파일이 아래 표에 자동으로 표시됩니다.
 
-| 화면 | 캡처 | 무엇을 담아야 하는지 |
+| 화면 | 캡처 | 무엇을 담았는지 |
 | --- | --- | --- |
 | 메뉴 | ![메뉴 화면](docs/screenshots/01-menu.png) | 6개 메뉴가 정상 표시된 첫 화면 |
 | 퀴즈 풀기 | ![퀴즈 풀기 화면](docs/screenshots/02-play.png) | 문제 출제부터 정답/오답 판정 결과까지 |
 | 잘못된 입력 처리 | ![입력 오류 처리 화면](docs/screenshots/03-invalid-input.png) | `abc`, `9`, 빈 입력 등에 대한 오류 메시지 |
 | 퀴즈 추가 | ![퀴즈 추가 화면](docs/screenshots/04-add-quiz.png) | 입력 과정 + "✅ 퀴즈가 추가되었습니다!" |
-| 퀴즈 목록 | ![퀴즈 목록 화면](docs/screenshots/05-list.png) | 등록된 16개 퀴즈 전체 목록 |
+| 퀴즈 목록 | ![퀴즈 목록 화면](docs/screenshots/05-list.png) | 등록된 퀴즈 전체 목록 (기본 16문항 + 테스트로 추가한 문항 포함) |
 | 점수 확인 | ![점수 확인 화면](docs/screenshots/06-score.png) | 최고 점수 + 최근 게임 기록(history) |
-| 재실행 후 데이터 유지 | ![데이터 유지 확인 화면](docs/screenshots/07-persist.png) | 재실행 시 `📂 저장된 데이터를 불러왔습니다 (...)` 문구가 이전 값 그대로 표시 |
+| 데이터 유지 — 변경 전 | ![재실행 전 화면](docs/screenshots/07-01-persist.png) | 퀴즈 추가/플레이 전 상태 (`퀴즈 16개, 최고점수 0점`) |
+| 데이터 유지 — 변경 후 | ![재실행 후 화면](docs/screenshots/07-02-persist.png) | 퀴즈 추가 + 게임 진행 후 재실행 → 값이 유지됨 (`퀴즈 17개, 최고점수 35점`) |
 | `git log` 그래프 | ![git log graph](docs/screenshots/08-git-log-graph.png) | `git log --oneline --graph` — 브랜치 병합 커밋과 10개 이상 커밋이 보이도록 |
-| 개발 환경 (선택) | ![개발 환경 화면](docs/screenshots/09-dev-env.png) | VSCode, `python3 --version`, `git config --list` 등 |
+| 개발 환경 — git 설정 명령 | ![git config 명령](docs/screenshots/09-01-dev-env.png) | `git config --list` 실행 |
+| 개발 환경 — git 설정 결과 | ![git config 결과](docs/screenshots/09-02-dev-env.png) | `user.name`/`user.email`/`remote.origin.url` 등 출력 결과 |
+| 개발 환경 — Python 버전 | ![python 버전](docs/screenshots/09-03-dev-env.png) | `python3 --version` → `Python 3.11.6` |
