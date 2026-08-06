@@ -624,8 +624,8 @@ SQLite 같은 파일 기반 DB로 옮겨서 필요한 레코드만 읽고/쓰고
 | 화면 | 캡처 | 무엇을 담았는지 |
 | --- | --- | --- |
 | 메뉴 | ![메뉴 화면](docs/screenshots/01-menu.png) | 6개 메뉴가 정상 표시된 첫 화면 |
-| 퀴즈 풀기 | ![퀴즈 풀기 화면](docs/screenshots/02-play.png) | 문제 출제부터 정답/오답 판정 결과까지 |
-| 잘못된 입력 처리 | ![입력 오류 처리 화면](docs/screenshots/03-invalid-input.png) | `abc`, `9`, 빈 입력 등에 대한 오류 메시지 |
+| 퀴즈 풀기 | ![퀴즈 풀기 화면](docs/screenshots/03-invalid-input.png) | 문제 출제부터 정답/오답 판정 결과까지 |
+| 잘못된 입력 처리 | ![입력 오류 처리 화면](docs/screenshots/02-play.png) | `abc`, `9`, 빈 입력 등에 대한 오류 메시지 |
 | 퀴즈 추가 | ![퀴즈 추가 화면](docs/screenshots/04-add-quiz.png) | 입력 과정 + "✅ 퀴즈가 추가되었습니다!" |
 | 퀴즈 목록 | ![퀴즈 목록 화면](docs/screenshots/05-list.png) | 등록된 퀴즈 전체 목록 (기본 16문항 + 테스트로 추가한 문항 포함) |
 | 점수 확인 | ![점수 확인 화면](docs/screenshots/06-score.png) | 최고 점수 + 최근 게임 기록(history) |
