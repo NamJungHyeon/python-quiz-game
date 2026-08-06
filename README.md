@@ -632,6 +632,8 @@ SQLite 같은 파일 기반 DB로 옮겨서 필요한 레코드만 읽고/쓰고
 | 데이터 유지 — 변경 전 | ![재실행 전 화면](docs/screenshots/07-01-persist.png) | 퀴즈 추가/플레이 전 상태 (`퀴즈 16개, 최고점수 0점`) |
 | 데이터 유지 — 변경 후 | ![재실행 후 화면](docs/screenshots/07-02-persist.png) | 퀴즈 추가 + 게임 진행 후 재실행 → 값이 유지됨 (`퀴즈 17개, 최고점수 35점`) |
 | `git log` 그래프 | ![git log graph](docs/screenshots/08-git-log-graph.png) | `git log --oneline --graph` — 브랜치 병합 커밋과 10개 이상 커밋이 보이도록 |
+| 저장소 복제 실습 — clone/commit/push | ![clone 후 커밋/푸시 화면](docs/screenshots/10-01-clone-pull.png) | 별도 디렉터리에 `git clone` → README 수정 → `git add`/`commit`/`push` |
+| 저장소 복제 실습 — pull 반영 확인 | ![pull 반영 확인 화면](docs/screenshots/10-02-clone-pull.png) | 원래 작업 디렉터리에서 `git pull`로 변경 사항이 반영되는 화면 |
 | 개발 환경 — git 설정 명령 | ![git config 명령](docs/screenshots/09-01-dev-env.png) | `git config --list` 실행 |
 | 개발 환경 — git 설정 결과 | ![git config 결과](docs/screenshots/09-02-dev-env.png) | `user.name`/`user.email`/`remote.origin.url` 등 출력 결과 |
 | 개발 환경 — Python 버전 | ![python 버전](docs/screenshots/09-03-dev-env.png) | `python3 --version` → `Python 3.11.6` |
